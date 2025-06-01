@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulasi Efek Doppler</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 0px;
+      font-family: 'Nunito', sans-serif;
+      background-color: #eef2f5;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    #container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    #frame {
+      width: 900px;
+      height: 580px;
+      border-radius: 10px;
+      background-color: #ffffff;
+      border: 2px solid #ccc;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .object {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: calc(50% - 15px);
+      border-radius: 50%;
+    }
+
+    #source {
+      background-color: rgb(255, 17, 17);
+      z-index: 10;
+    }
+    #observer {
+      background-color: rgb(0, 214, 139);
+      z-index: 10;
+    }
+    .wave {
+      position: absolute;
+      border: 1px solid rgba(0, 0, 255, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.2s linear;
+      box-sizing: border-box;
+      z-index: 5;
+    }
+
+    #controls {
+      width: 300px;
+      flex-shrink: 0;
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      box-sizing: border-box;
+    }
+
+    #controls h2 {
+      margin-top: 0px;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #000000;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 3px;
+      margin-bottom: 2px;
+      font-size: 15px;
+      color: #000000;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      padding: 3px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+
+    span {
+      font-weight: 700;
+      color: #007acc;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 40px;
+      align-items: center;
+    }
+
+    button {
+      flex: 1;
+      padding: 8px 0;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      background-color: #007acc;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+  </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']]
+      }
+    };
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+
+<body>
+  <div id="container">
+    <div id="frame">
+      <div id="source" class="object"></div>
+      <div id="observer" class="object"></div>
+    </div>
+
+    <div id="controls">
+      <h2>Simulasi Efek Doppler</h2>
+
+      <label for="sourceSelect">🔴 Sumber:</label>
+      <select id="sourceSelect">
+        <option value="diam">Diam</option>
+        <option value="mendekat">Mendekat</option>
+        <option value="menjauh">Menjauh</option>
+      </select>
+
+      <label for="sourceSpeed">Kecepatan Sumber (\( v_s \)): <span id="sourceSpeedValue">0</span> m/s</label>
+      <input type="range" id="sourceSpeed" min="10" max="200" step="5" value="10" disabled>
+
+      <label for="observerSelect">🟢 Pendengar:</label>
+      <select id="observerSelect">
+        <option value="diam">Diam</option>
+        <option value="mendekat">Mendekat</option>
+        <option value="menjauh">Menjauh</option>
+      </select>
+
+      <label for="observerSpeed">Kecepatan Pendengar (\( v_p \)): <span id="observerSpeedValue">0</span> m/s</label>
+      <input type="range" id="observerSpeed" min="10" max="200" step="5" value="10" disabled>
+
+      <label for="frequencySlider">Frekuensi Sumber (\( f_s \)): <span id="frequencyValue">50</span> Hz</label>
+      <input type="range" id="frequencySlider" min="50" max="400" step="50" value="50">
+
+      <label>Frekuensi Pendengar (\( f_p \)): <span id="listenerFrequencyValue">0</span> Hz</label>
+      
+      <div id="dopplerFormula" style="margin-top: 10px; font-size: 15px;">
+        <strong>Rumus Efek Doppler:</strong>
+        <p id="formulaMathJax">
+          $$ f_p = f_s \cdot \frac{v}{v} $$
+        </p>
+        <p style="font-size: 11px;">
+          \( v = 340 \, m/s \) (kecepatan bunyi di udara)
+        </p>
+      </div>
+
+      <div class="button-row">
+        <button id="playPauseButton" title="Play/Pause" style="font-size: 18px;">▶</button>
+        <button id="stop-button" title="Stop" style="font-size: 18px;">⏹</button>
+        <button id="muteButton" title="Mute/Unmute" style="font-size: 18px;">🔊</button>
+        <button id="resetButton" title="Reset" style="font-size: 20px;">↻</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const frame = document.getElementById("frame");
+    const frameWidth = 900;
+    const objectSize = 20;
+    const padding = 5;
+    const minDistance = 50;
+
+    const meterPerPixel = 1 / 80;
+    const waveSpeedMps = 340;
+
+    const source = document.getElementById("source");
+    const observer = document.getElementById("observer");
+    const sourceSelect = document.getElementById("sourceSelect");
+    const observerSelect = document.getElementById("observerSelect");
+    const sourceSpeedSlider = document.getElementById("sourceSpeed");
+    const observerSpeedSlider = document.getElementById("observerSpeed");
+    const sourceSpeedValue = document.getElementById("sourceSpeedValue");
+    const observerSpeedValue = document.getElementById("observerSpeedValue");
+    const playPauseButton = document.getElementById("playPauseButton");
+    const resetButton = document.getElementById("resetButton");
+    const frequencySlider = document.getElementById("frequencySlider");
+    const frequencyValue = document.getElementById("frequencyValue");
+    // AUDIO
+    const muteButton = document.getElementById("muteButton");
+
+    let sourcePos = 0, observerPos = 0;
+    let sourceDir = 0, observerDir = 0;
+    let isPlaying = false;
+    let animationId;
+    let initialSourcePos, initialObserverPos;
+
+    const maxWaves = 30;
+    let waves = [];
+    let lastWaveTimestamp = 0;
+
+    // AUDIO: Web Audio API setup
+    let audioCtx = null;
+    let oscillator = null;
+    let gainNode = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        oscillator = audioCtx.createOscillator();
+        gainNode = audioCtx.createGain();
+
+        oscillator.type = "triangle";
+        oscillator.frequency.setValueAtTime(frequencySlider.value, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // volume rendah supaya nyaman
+
+        oscillator.connect(gainNode).connect(audioCtx.destination);
+        oscillator.start();
+        pauseAudio();
+      }
+    }
+
+    function playAudio() {
+      if (!audioCtx) initAudio();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (!isMuted) gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    }
+
+    function pauseAudio() {
+      if (!audioCtx) return;
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    }
+
+    function stopAudio() {
+      if (!audioCtx) return;
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    }
+
+    function calculateDopplerFrequency(f, v, vo, vs) {
+      return f * (v + vo) / (v + vs);
+    }
+
+    function clampPosition(pos) {
+      return Math.min(frameWidth - objectSize - padding, Math.max(padding, pos));
+    }
+
+    function saveInitialPositions() {
+      initialSourcePos = sourcePos;
+      initialObserverPos = observerPos;
+    }
+
+    function resetSimulationByDropdown() {
+      const sumber = sourceSelect.value;
+      const pendengar = observerSelect.value;
+
+      if (sumber === "diam") {
+        sourcePos = frameWidth / 3 - objectSize / 2;
+        sourceDir = 0;
+      } else if (sumber === "mendekat") {
+        sourcePos = padding;
+        sourceDir = 1;
+      } else {
+        sourcePos = frameWidth / 2 - objectSize / 2;
+        sourceDir = -1;
+      }
+
+      if (pendengar === "diam") {
+        observerPos = 2 * frameWidth / 3 - objectSize / 2;
+        observerDir = 0;
+      } else if (pendengar === "mendekat") {
+        observerPos = frameWidth - objectSize - padding;
+        observerDir = -1;
+      } else {
+        observerPos = frameWidth / 2 - objectSize / 2;
+        observerDir = 1;
+      }
+
+      sourcePos = clampPosition(sourcePos);
+      observerPos = clampPosition(observerPos);
+
+      source.style.left = sourcePos + "px";
+      observer.style.left = observerPos + "px";
+
+      sourceSpeedSlider.disabled = (sumber === "diam");
+      observerSpeedSlider.disabled = (pendengar === "diam");
+
+      sourceSpeedValue.textContent = sourceSpeedSlider.disabled ? "0" : sourceSpeedSlider.value;
+      observerSpeedValue.textContent = observerSpeedSlider.disabled ? "0" : observerSpeedSlider.value;
+
+      waves.forEach(w => w.element.remove());
+      waves = [];
+      lastWaveTimestamp = 0;
+
+      pauseSimulation();
+      updatePlayPauseButton();
+      saveInitialPositions();
+      pauseAudio();
+    }
+
+    function pauseAndResetOnCrash() {
+      pauseSimulation();
+      waves.forEach(wave => wave.element.remove());
+      waves = [];
+      lastWaveTimestamp = 0;
+      sourcePos = initialSourcePos;
+      observerPos = initialObserverPos;
+      source.style.left = sourcePos + "px";
+      observer.style.left = observerPos + "px";
+      pauseAudio();
+    }
+
+    function resetToInitialState() {
+      sourceSelect.value = "diam";
+      observerSelect.value = "diam";
+  // Reset slider ke nilai awal
+      sourceSpeedSlider.value = 10;
+      observerSpeedSlider.value = 10;
+      frequencySlider.value = 50;
+
+      sourceSpeedValue.textContent = "0";
+      observerSpeedValue.textContent = "0";
+      frequencyValue.textContent = "50";
+  // Disable slider kecepatan karena posisi awal dropdown adalah "diam"
+      sourceSpeedSlider.disabled = true;
+      observerSpeedSlider.disabled = true;
+  // Reset posisi berdasarkan dropdown
+      resetSimulationByDropdown();
+      updateFormula()
+    }
+
+    function animate(timestamp) {
+      if (!isPlaying) return;
+      if (!lastWaveTimestamp) lastWaveTimestamp = timestamp;
+      
+      const vSource = sourceDir * parseInt(sourceSpeedSlider.value) * meterPerPixel;
+      const vObserver = observerDir * parseInt(observerSpeedSlider.value) * meterPerPixel;
+      
+      if (sourceDir !== 0) {
+        sourcePos += vSource;
+        sourcePos = clampPosition(sourcePos);
+        source.style.left = sourcePos + "px";
+      }
+      
+      if (observerDir !== 0) {
+        observerPos += vObserver;
+        observerPos = clampPosition(observerPos);
+        observer.style.left = observerPos + "px";
+      }
+      
+      if (!(sourceDir === -1 && observerDir === 1) && Math.abs(sourcePos - observerPos) < minDistance) {
+        pauseAndResetOnCrash();
+        return;
+      }
+
+      if (
+        (sourceDir === 1 && sourcePos >= frameWidth - objectSize - padding) ||
+        (sourceDir === -1 && sourcePos <= padding) ||
+        (observerDir === 1 && observerPos >= frameWidth - objectSize - padding) ||
+        (observerDir === -1 && observerPos <= padding)
+      ) {
+        pauseAndResetOnCrash();
+        return;
+      }
+
+      const elapsed = (timestamp - lastWaveTimestamp) / 1000;
+      const freq = parseInt(frequencySlider.value);
+      const waveInterval = 20 / freq;
+
+      if (elapsed >= waveInterval) {
+        if (waves.length >= maxWaves) {
+          waves.shift().element.remove();
+        }
+        
+        const waveEl = document.createElement("div");
+        waveEl.classList.add("wave");
+        frame.appendChild(waveEl);
+        waves.push({ element: waveEl, radius: 0, x: sourcePos + objectSize / 2 });
+        lastWaveTimestamp = timestamp;
+      }
+
+      const waveSpeed = waveSpeedMps * meterPerPixel;
+      const sourceTop = source.offsetTop + objectSize / 2;
+      waves.forEach(wave => {
+      wave.radius += waveSpeed;
+      wave.element.style.width = wave.radius * 2 + "px";
+      wave.element.style.height = wave.radius * 2 + "px";
+      wave.element.style.left = wave.x - wave.radius + "px";
+      wave.element.style.top = sourceTop - wave.radius + "px";
+      const maxRadius = frameWidth / 2;
+      let opacity = 1 - (wave.radius / maxRadius);
+      wave.element.style.borderColor = `rgba(0,0,255,${opacity.toFixed(2)})`;
+      if (opacity <= 0) wave.element.remove();
+    });
+    
+    waves = waves.filter(w => w.radius <= frameWidth / 2);
+
+  // Hitung kecepatan sumber dan pendengar dalam m/s (bukan px/frame)
+    const vSourceMps = sourceDir * parseInt(sourceSpeedSlider.value);
+    const vObserverMps = observerDir * parseInt(observerSpeedSlider.value);
+
+  // Hitung vo (kecepatan pendengar relatif sumber)
+    let vo = 0;
+    if (observerDir === 0) {
+      vo = 0;
+    } else {
+      if (observerDir === -1 && observerPos > sourcePos) {
+        vo = Math.abs(vObserverMps);
+      } else if (observerDir === 1 && observerPos < sourcePos) {
+        vo = Math.abs(vObserverMps);  // mendekat
+      } else {
+        vo = -Math.abs(vObserverMps); // menjauh
+      }
+    }
+
+  // Hitung vs (kecepatan sumber relatif pendengar)
+    let vs = 0;
+    if (sourceDir === 0) {
+      vs = 0;
+    } else {
+      if (sourceDir === 1 && sourcePos < observerPos) {
+        vs = -Math.abs(vSourceMps); // mendekat
+      } else if (sourceDir === -1 && sourcePos > observerPos) {
+        vs = -Math.abs(vSourceMps); // mendekat
+      } else {
+        vs = Math.abs(vSourceMps);  // menjauh
+      }
+    }
+
+    let freqDoppler = calculateDopplerFrequency(freq, waveSpeedMps, vo, vs);
+    freqDoppler = Math.max(1, Math.min(freqDoppler, 4000));
+
+    if (oscillator) {
+      oscillator.frequency.setValueAtTime(freqDoppler, audioCtx.currentTime);
+    }
+    
+    listenerFrequencyValue.textContent = freqDoppler.toFixed(2);
+
+    animationId = requestAnimationFrame(animate);
+  }
+
+    function playSimulation() {
+      if (!isPlaying) {
+        isPlaying = true;
+        playPauseButton.textContent = "⏸";
+        playAudio();
+        animationId = requestAnimationFrame(animate);
+      }
+    }
+
+    function pauseSimulation() {
+      if (isPlaying) {
+        isPlaying = false;
+        playPauseButton.textContent = "▶";
+        pauseAudio();
+        if (animationId) cancelAnimationFrame(animationId);
+      }
+    }
+
+    function updatePlayPauseButton() {
+      playPauseButton.textContent = isPlaying ? "⏸" : "▶";
+    }
+
+    const formulaEl = document.getElementById('formulaMathJax');
+
+    function updateFormula() {
+      const sumber = sourceSelect.value;
+      const pengamat = observerSelect.value;
+      let rumus = "";
+
+      if (sumber === "diam" && pengamat === "diam") {
+        rumus = `f_p = f_s`;
+      } else if (sumber === "diam" && pengamat === "mendekat") {
+        rumus = `f_p = f_s \\cdot \\frac{v + v_p}{v}`;
+      } else if (sumber === "diam" && pengamat === "menjauh") {
+        rumus = `f_p = f_s \\cdot \\frac{v - v_p}{v}`;
+      } else if (sumber === "mendekat" && pengamat === "diam") {
+        rumus = `f_p = f_s \\cdot \\frac{v}{v - v_s}`;
+      } else if (sumber === "menjauh" && pengamat === "diam") {
+        rumus = `f_p = f_s \\cdot \\frac{v}{v + v_s}`;
+      } else if (sumber === "mendekat" && pengamat === "mendekat") {
+        rumus = `f_p = f_s \\cdot \\frac{v + v_p}{v - v_s}`;
+      } else if (sumber === "menjauh" && pengamat === "menjauh") {
+        rumus = `f_p = f_s \\cdot \\frac{v - v_p}{v + v_s}`;
+      } else if (sumber === "mendekat" && pengamat === "menjauh") {
+        rumus = `f_p = f_s \\cdot \\frac{v - v_p}{v - v_s}`;
+      } else if (sumber === "menjauh" && pengamat === "mendekat") {
+        rumus = `f_p = f_s \\cdot \\frac{v + v_p}{v + v_s}`;
+      }
+
+      formulaEl.innerHTML = `$$ ${rumus} $$`;
+      MathJax.typesetPromise();
+    }
+
+    sourceSelect.addEventListener("change", () => {
+      resetSimulationByDropdown();
+      updateFormula();
+    });
+
+    observerSelect.addEventListener("change", () => {
+      resetSimulationByDropdown();
+      updateFormula();
+    });
+
+    sourceSpeedSlider.addEventListener("input", () => {
+      sourceSpeedValue.textContent = sourceSpeedSlider.value;
+    });
+
+    observerSpeedSlider.addEventListener("input", () => {
+      observerSpeedValue.textContent = observerSpeedSlider.value;
+    });
+
+    frequencySlider.addEventListener("input", () => {
+      frequencyValue.textContent = frequencySlider.value;
+      if (oscillator) {
+        oscillator.frequency.setValueAtTime(parseInt(frequencySlider.value), audioCtx.currentTime);
+      }
+    });
+
+    playPauseButton.addEventListener("click", () => {
+      if (isPlaying) {
+        pauseSimulation();
+      } else {
+        playSimulation();
+      }
+    });
+
+    resetButton.addEventListener("click", () => {
+      pauseSimulation();
+      resetToInitialState();
+    });
+
+    // AUDIO: Mute button toggle
+    muteButton.addEventListener("click", () => {
+      if (!audioCtx) return;
+      isMuted = !isMuted;
+      if (isMuted) {
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        muteButton.textContent = "🔇";
+      } else {
+        if (isPlaying) {
+          gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        }
+        muteButton.textContent = "🔊";
+      }
+    });
+
+    const stopButton = document.getElementById("stop-button");
+    stopButton.addEventListener("click", () => {
+      pauseSimulation(); 
+      resetSimulationByDropdown();
+    });
+
+    resetSimulationByDropdown();
+    updateFormula();
+    
+  </script>
+</body>
+</html>
