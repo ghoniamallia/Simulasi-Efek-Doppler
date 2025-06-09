@@ -148,29 +148,62 @@
 </head>
 
 <body>
-  <div id="landingPage" style="max-width: 800px; margin: 60px auto; padding: 40px; text-align: left; background-color: white; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.05);">
+  <div id="landingPage" style="max-width: 900px; margin: 60px auto; padding: 40px; text-align: left; background-color: white; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.05);">
     <h1 style="font-size: 32px; color: #007acc; text-align: center;">Simulasi Efek Doppler</h1>
     
     <p style="font-size: 16px; color: #333; margin-top: 20px;">
       Selamat datang di simulasi Efek Doppler. Simulasi ini dirancang untuk membantu Anda memahami bagaimana perubahan frekuensi gelombang terdengar berbeda tergantung pada gerak relatif antara sumber dan pendengar.
     </p>
-  
-    <h2 style="font-size: 20px; color: #444; margin-top: 30px;">📌 Petunjuk Penggunaan:</h2>
-    <ul style="font-size: 16px; line-height: 1.6; color: #333; padding-left: 20px;">
-      <li>Pilih kondisi gerak sumber (diam, mendekat, menjauh).</li>
-      <li>Pilih kondisi gerak pendengar (diam, mendekat, menjauh).</li>
-      <li>Atur kecepatan masing-masing menggunakan slider (jika tidak dalam keadaan diam).</li>
-      <li>Atur frekuensi sumber bunyi sesuai keinginan.</li>
-      <li>Tekan tombol ▶ untuk memulai simulasi dan amati perubahan gelombang serta frekuensi yang didengar.</li>
-      <li>Gunakan tombol reset (↻) untuk mengembalikan ke kondisi awal.</li>
-      <li>Tekan ⏹ untuk menghentikan dan memilih kondisi baru.</li>
-      <li>Gunakan tombol 🔇/🔊 untuk mematikan/menghidupkan suara.</li>
-    </ul>
-  
-    <p style="font-size: 14px; color: #666; margin-top: 20px;">
-      Catatan: Simulasi akan otomatis berhenti jika sumber dan pendengar terlalu dekat atau salah satu mencapai ujung frame.
-    </p>
-  
+
+    <h2 style="font-size: 20px; color: #444; margin-top: 30px;">Petunjuk: </h2>
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">1. Sebelum memulai simulasi, pilihlah kondisi sumber dan pengamat dengan cara klik dropdown, lalu klik kondisi yang diinginkan (diam/mendekat/menjauh).</p>
+      <img src="step1.png" alt="Dropdown sumber/pendengar" style="max-width: 300px; height: auto; border-radius: 8px; margin-top: 8px;" />
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">2. Atur kecepatan sumber/pendengar dengan cara menggeser slider ke kiri atau ke kanan (slider kecepatan akan otomatis disabled saat sumber atau pengamat dalam kondisi diam).</p>
+      <img src="step2.png" alt="Slider Kecepatan" style="max-width: 300px; height: auto; border-radius: 8px; margin-top: 8px;" />
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">3. Atur frekuensi sumber dengan cara menggeser slider ke kiri atau ke kanan.</p>
+      <img src="step3.png" alt="Slider frekuensi" style="max-width: 300px; height: auto; border-radius: 8px; margin-top: 8px;" />
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">4. Tekan tombol ▶ (play) untuk memulai simulasi. Visualisasi gelombang dan audio frekuensi akan muncul.</p>
+      <img src="step4.png" alt="Slider frekuensi" style="max-width: 300px; height: auto; border-radius: 8px; margin-top: 8px;" />
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">5. Tekan tombol ⏸ (pause) untuk menjeda simulasi. Gerakan sumber, pengamat, dan gelombang akan terjeda, dan audio pun akan mati.</p>
+      <img src="step5.png" alt="Slider frekuensi" style="max-width: 300px; height: auto; border-radius: 8px; margin-top: 8px;" />
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">6. Tekan tombol 🔇/🔊 untuk mematikan/menghidupkan audio.</p>
+      <p style="font-weight: 600;">7. Tekan tombol ⏹ (stop) untuk menghentikan simulasi (sumber dan pengamat akan kembali ke posisi awal, namun nilai kecepatan dan frekuensi tidak berubah).</p>
+      <p style="font-weight: 600;">8. Tekan tombol ↻ (reset) untuk mengembalikan simulasi ke kondisi awal.</p>
+    </div>
+
+    <h2 style="font-size: 20px; color: #444; margin-top: 30px;">Disclaimer: </h2>
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">1. Simulasi ini hanya berfokus pada visualisasi konsep sehingga skala posisi dan jarak dalam simulasi ini tidak merepresentasikan skala fisik sebenarnya (arbitrer).</p>
+      <p style="font-weight: 600;">2. Visualisasi dalam simulasi ini merupakan sudut pandang orang ketiga (orang yang berada di luar kejadian). Namun, audio frekuensi yang muncul merupakan sudut pandang pendengar/pengamat. </p>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">3. Frekuensi audio yang muncul dan tercantum pada "Frekuensi Pendengar" sudah sesuai dengan perhitungan rumus Efek Doppler (sudah divalidasi menggunakan aplikasi Phyphox).</p>
+      <img src="step6.png" alt="Slider frekuensi" style="max-width: 300px; height: auto; border-radius: 8px; margin-top: 8px;" />
+    </div>
+      
+    <div style="margin-bottom: 30px;">
+      <p style="font-weight: 600;">4. Batas bawah frekuensi dalam simulasi ini adalah 100 Hz, dengan alasan frekuensi yang lebih rendah akan terdengar kurang optimal pada pendengaran manusia.</p>
+      <p style="font-weight: 600;">5. Batas atas frekuensi dalam simulasi ini adalah 400 Hz, dengan alasan menjaga kenyamanan pengguna (frekuensi yang terlalu tinggi dapat menyebabkan ketidaknyamanan).</p>
+      <p style="font-weight: 600;">6. Untuk pengalaman terbaik, sangat disarankan menjalankan simulasi ini menggunakan laptop atau perangkat dengan resolusi layar minimal 1280×720 piksel (penggunaan perangkat dengan layar kecil dapat menyebabkan tampilan simulasi terpotong atau tidak maksimal).</p>
+    </div>
+
     <div style="text-align: center; margin-top: 40px;">
       <button id="startButton"
         style="
@@ -188,11 +221,29 @@
       </button>
     </div>
   </div>
-  
+
   <div id="container">
     <div id="frame">
       <div id="source" class="object"></div>
       <div id="observer" class="object"></div>
+      <button id="backButton"
+        style="
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          padding: 6px 10px;
+          font-size: 10px;
+          font-weight: 500;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          background-color: #6c757d;
+          cursor: pointer;
+          transition: background-color 0.3s ease;"
+        onmouseover="this.style.backgroundColor='#5a6268'"
+        onmouseout="this.style.backgroundColor='#6c757d'">
+        Kembali
+      </button>
     </div>
 
     <div id="controls">
@@ -218,8 +269,8 @@
       <label for="observerSpeed">Kecepatan Pendengar (\( v_p \)): <span id="observerSpeedValue">0</span> m/s</label>
       <input type="range" id="observerSpeed" min="10" max="200" step="5" value="10" disabled>
       
-      <label for="frequencySlider">Frekuensi Sumber (\( f_s \)): <span id="frequencyValue">50</span> Hz</label>
-      <input type="range" id="frequencySlider" min="50" max="400" step="50" value="50">
+      <label for="frequencySlider">Frekuensi Sumber (\( f_s \)): <span id="frequencyValue">100</span> Hz</label>
+      <input type="range" id="frequencySlider" min="100" max="400" step="50" value="100">
       
       <label>Frekuensi Pendengar (\( f_p \)): <span id="listenerFrequencyValue">0</span> Hz</label>
       
@@ -238,8 +289,8 @@
         <button id="muteButton" title="Mute/Unmute" style="font-size: 18px;">🔊</button>
         <button id="resetButton" title="Reset" style="font-size: 20px;">↻</button>
       </div>
-
     </div>
+
   </div>
 
   <script>
@@ -394,11 +445,11 @@
   // Reset slider ke nilai awal
       sourceSpeedSlider.value = 10;
       observerSpeedSlider.value = 10;
-      frequencySlider.value = 50;
+      frequencySlider.value = 100;
 
       sourceSpeedValue.textContent = "0";
       observerSpeedValue.textContent = "0";
-      frequencyValue.textContent = "50";
+      frequencyValue.textContent = "100";
   // Disable slider kecepatan karena posisi awal dropdown adalah "diam"
       sourceSpeedSlider.disabled = true;
       observerSpeedSlider.disabled = true;
@@ -472,11 +523,9 @@
     });
     
     waves = waves.filter(w => w.radius <= frameWidth / 2);
-
   // Hitung kecepatan sumber dan pendengar dalam m/s (bukan px/frame)
     const vSourceMps = sourceDir * parseInt(sourceSpeedSlider.value);
     const vObserverMps = observerDir * parseInt(observerSpeedSlider.value);
-
   // Hitung vo (kecepatan pendengar relatif sumber)
     let vo = 0;
     if (observerDir === 0) {
@@ -490,7 +539,6 @@
         vo = -Math.abs(vObserverMps); // menjauh
       }
     }
-
   // Hitung vs (kecepatan sumber relatif pendengar)
     let vs = 0;
     if (sourceDir === 0) {
@@ -631,13 +679,29 @@
 
     resetSimulationByDropdown();
     updateFormula();
-    
   </script>
 
   <script>
     document.getElementById("startButton").addEventListener("click", function () {
       document.getElementById("landingPage").style.display = "none";
       document.getElementById("container").style.display = "flex";
+    });
+  </script>
+
+  <script>
+    document.getElementById("startButton").addEventListener("click", function () {
+      document.getElementById("landingPage").style.display = "none";
+      document.getElementById("container").style.display = "flex";
+    });
+
+    document.getElementById("backButton").addEventListener("click", function () {
+      // Kembali ke landing page
+      document.getElementById("container").style.display = "none";
+      document.getElementById("landingPage").style.display = "block";
+
+      // Reset semua agar tidak ada yang jalan saat kembali
+      pauseSimulation();
+      resetToInitialState();
     });
   </script>
 
